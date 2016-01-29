@@ -9,8 +9,6 @@ Nightmare.action('downloadManager',
       .join,
       sliced = require('sliced');
 
-    var app = require('app');
-
     win.webContents.session.on('will-download',
       function(event, downloadItem, webContents) {
         parent.emit('log', 'will-download');
@@ -26,12 +24,12 @@ Nightmare.action('downloadManager',
           receivedBytes: 0,
           totalBytes: downloadItem.getTotalBytes(),
           url: downloadItem.getURL(),
-          path: join(app.getPath('downloads'), downloadItem.getFilename())
+          path: join('./', downloadItem.getFilename())
         };
 
         downloadItem.on('done', function(e, state) {
           if (state == 'completed') {
-            fs.renameSync(join(app.getPath('downloads'), downloadItem.getFilename()), downloadInfo.path);
+            fs.renameSync(join('./', downloadItem.getFilename()), downloadInfo.path);
           }
           parent.emit('download', state, downloadInfo);
         });
